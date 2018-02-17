@@ -1,5 +1,7 @@
 package c.braedenm.dashesinadot;
 
+import android.content.Context;
+import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -13,6 +15,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+public class MainActivity extends AppCompatActivity
+{
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference reference = database.getReference("test");
+
+    Button b_vibe;
+    Vibrator v;
 
 /**
  * Links with the activity_main and controls its activities
@@ -35,34 +45,18 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        readout = findViewById(R.id.textView2);
-        button = findViewById(R.id.button);
-        active = false;
+        reference.setValue("quack");
 
-        button.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    active = true;
-                }
-                else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    active = false;
-                }
-                System.out.println(active);
-                reference.setValue(active);
-                return true;
-            }
-        });
+        //b_vibe = (Button) findViewById(R.id.button2);
+        v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
-        reference.addValueEventListener(new ValueEventListener() {
+        b_vibe.setOnClickListener (new View.OnClickListener()
+        {
             @Override
-            public void onCancelled(DatabaseError databaseError)
+            public void onClick(View view)
             {
-                /* Blank for now */
-            }
-
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
+                //vibrate in ms
+                v.vibrate(100);
             }
         });
     }
