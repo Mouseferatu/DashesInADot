@@ -8,79 +8,83 @@
     tools:layout_editor_absoluteY="81dp">
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/changeID"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="187dp"
-        android:text="Button"
+        android:layout_marginBottom="73dp"
+        android:text="@string/changeID"
+        app:layout_constraintBottom_toTopOf="@+id/userMenuLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/currentID"
+        tools:text="changeID" />
+
+    <EditText
+        android:id="@+id/enterID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:selectAllOnFocus="true"
+        android:singleLine="false"
+        android:text="@string/enterIDdef"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/currentID"
+        tools:text="enterID" />
+
+    <TextView
+        android:id="@+id/currentID"
+        android:layout_width="121dp"
+        android:layout_height="27dp"
+        android:layout_marginBottom="53dp"
+        android:text="@string/yourIDdef"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/changeID"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="yourID" />
+
+    <Button
+        android:id="@+id/transmitButton"
+        android:layout_width="211dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="92dp"
+        android:background="@android:color/holo_orange_light"
+        android:text="@string/transmit"
+        android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText"
-        tools:text="Enter" />
+        app:layout_constraintTop_toBottomOf="@+id/userMenu"
+        tools:text="transmit" />
 
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="wrap_content"
+    <Spinner
+        android:id="@+id/userMenu"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="11dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="YourTextHere"
-        app:layout_constraintBottom_toTopOf="@+id/button"
+        android:layout_marginBottom="68dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/transmitButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/userMenuLabel" />
 
     <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginTop="189dp"
-        android:text="SomeonesTextHere"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="78dp"
-        android:layout_height="39dp"
-        android:layout_marginTop="8dp"
-        android:background="@android:color/holo_orange_light"
-        android:text="Vibrate"
-        android:textColor="@android:color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline"
+        android:id="@+id/userMenuLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="20dp" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="20dp" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="20dp" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="20dp" />
+        android:layout_marginBottom="13dp"
+        android:layout_marginStart="9dp"
+        android:text="@string/activeUsers"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/userMenu"
+        app:layout_constraintStart_toStartOf="@+id/changeID"
+        app:layout_constraintTop_toBottomOf="@+id/changeID"
+        tools:text="activeUsers" />
 
 </android.support.constraint.ConstraintLayout>

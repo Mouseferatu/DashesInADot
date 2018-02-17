@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">Dashes In A Dot</string>
-    <string name="on">On</string>
-    <string name="off">Off</string>
+    <string name="changeID">Change ID</string>
+    <string name="enterIDdef">Enter ID</string>
+    <string name="yourIDdef">Your ID</string>
+    <string name="transmit">Transmit</string>
+    <string name="activeUsers">Active Users</string>
 </resources>
