@@ -18,14 +18,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class MainActivity extends AppCompatActivity
-{
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference reference = database.getReference("test");
-
-    Button b_vibe;
-    Vibrator v;
-
 /**
  * Links with the activity_main and controls its activities
  */
@@ -114,14 +106,19 @@ public class MainActivity extends AppCompatActivity
     {
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
-        transmitButton.setOnTouchListener(new View.OnTouchListener() {
+        transmitButton.setOnTouchListener(new View.OnTouchListener()
+        {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+            public boolean onTouch(View view, MotionEvent motionEvent)
+            {
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN)
+                {
                     //long[] pattern = {0, 200, 0}; //0 to start now, 200 to vibrate 200 ms, 0 to sleep for 0 ms.
                     //vibrator.vibrate(pattern, 0); // 0 to repeat endlessly.
                     transmitDB.setValue(true);
-                } else if (motionEvent.getAction() == MotionEvent.ACTION_UP || motionEvent.getAction() == MotionEvent.ACTION_CANCEL) {
+                }
+                else if (motionEvent.getAction() == MotionEvent.ACTION_UP || motionEvent.getAction() == MotionEvent.ACTION_CANCEL)
+                {
                     //vibrator.cancel();
                     transmitDB.setValue(false);
                 }
