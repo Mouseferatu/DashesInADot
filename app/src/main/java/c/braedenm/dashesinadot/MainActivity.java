@@ -35,6 +35,8 @@ public class MainActivity extends AppCompatActivity
     private TextView readout;
     private Button button;
     private Boolean active;
+    Button b_vibe;
+    Vibrator v;
 
     /**
      * This is called when the application loads activity_main
