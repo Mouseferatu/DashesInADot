@@ -18,6 +18,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+public class MainActivity extends AppCompatActivity
+{
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference reference = database.getReference("test");
+
+    Button b_vibe;
+    Vibrator v;
+
 /**
  * Links with the activity_main and controls its activities
  */
