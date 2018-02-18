@@ -8,10 +8,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -25,13 +23,16 @@ import java.util.Iterator;
 
 /**
  * Links with the activity_main and controls its activities
+ * @author Braeden Muller
+ * @author James Zhang
+ * @author Katherine Sophery Yap
+ * @version 2018.2.18
  */
 public class MainActivity extends AppCompatActivity
 {
     /* Local Variables */
     private final String DEFAULT_LOCATION = "defaultID";
     private final boolean ACTIVITY_DEFAULT = false;
-    private boolean activeReceive;
     private boolean activeTransmit;
 
     private ArrayList postPacket = new ArrayList();
@@ -41,22 +42,21 @@ public class MainActivity extends AppCompatActivity
 
     private Iterator pullPacketIterator = pullPacket.iterator();
 
-    private String[] userArray;
-    private ArrayList<String> userIDs;
+    private String receiveLocation;
 
     /* UI Elements */
     private Button transmitButton;
     private Button changeID;
     private EditText editID;
     private TextView currentID;
-    //private TextView activeUsers;
-    private Spinner userMenu;
+    private Button changeRC;
+    private EditText editRC;
+    private TextView currentRC;
 
 
     /* Local Services */
     private Vibrator vibrator;
     private Handler handler = new Handler();
-    private Context referenceContext;
 
     /* Remote Services */
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -75,15 +75,12 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         /* Default Values */
-        activeReceive = ACTIVITY_DEFAULT;
         activeTransmit = ACTIVITY_DEFAULT;
-        userArray = new String[]{DEFAULT_LOCATION};
 
         user = DEFAULT_LOCATION;
+        receiveLocation = DEFAULT_LOCATION;
         updateTransmitLocation(DEFAULT_LOCATION);
         updateReceiveLocation(DEFAULT_LOCATION);
-
-        referenceContext = this;
 
         writeDB(postPacket);
 
@@ -128,6 +125,15 @@ public class MainActivity extends AppCompatActivity
                 currentID.setText(user);
             }
         });
+
+        changeRC.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                receiveLocation = editRC.getText().toString();
+                updateReceiveLocation(receiveLocation);
+                currentRC.setText(receiveLocation);
+            }
+        });
     }
 
     /**
@@ -139,7 +145,10 @@ public class MainActivity extends AppCompatActivity
         changeID = findViewById(R.id.changeID);
         editID = findViewById(R.id.enterID);
         currentID = findViewById(R.id.currentID);
-        userMenu = findViewById(R.id.userMenu);
+
+        changeRC = findViewById(R.id.changeRC);
+        editRC = findViewById(R.id.enterRC);
+        currentRC = findViewById(R.id.currentRC);
     }
 
     /**
@@ -184,13 +193,6 @@ public class MainActivity extends AppCompatActivity
                     pullPacket = pulledData;
                     pullPacketIterator = pullPacket.iterator();
                 }
-
-                userIDs = new ArrayList<>();
-                for (DataSnapshot snap : dataSnapshot.getChildren()) {
-                    userIDs.add(snap.getKey());
-                }
-                userArray = userIDs.toArray(new String[0]);
-                userMenu.setAdapter(new ArrayAdapter<>(referenceContext, android.R.layout.simple_spinner_item, userArray));
             }
 
             @Override
@@ -267,6 +269,5 @@ public class MainActivity extends AppCompatActivity
     {
         transmitDB.child("values").setValue(write);
         transmitDB.child("timestamp").setValue(System.currentTimeMillis());
-        transmitDB.child("users").setValue(new ArrayList<String>());
     }
 }
