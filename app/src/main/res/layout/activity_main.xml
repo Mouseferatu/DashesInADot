@@ -11,10 +11,11 @@
         android:id="@+id/changeID"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="48dp"
+        android:layout_marginBottom="32dp"
         android:text="@string/changeID"
         app:layout_constraintBottom_toTopOf="@+id/currentRC"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/currentID"
         tools:text="changeID" />
@@ -39,25 +40,28 @@
         android:id="@+id/currentID"
         android:layout_width="121dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="53dp"
+        android:layout_marginBottom="75dp"
+        android:layout_marginTop="35dp"
         android:text="@string/yourIDdef"
         android:textAlignment="center"
         app:layout_constraintBottom_toTopOf="@+id/changeID"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="spread_inside"
         tools:text="yourID" />
 
     <Button
         android:id="@+id/transmitButton"
         android:layout_width="221dp"
         android:layout_height="99dp"
-        android:layout_marginBottom="91dp"
-        android:background="@android:color/holo_orange_light"
+        android:layout_marginBottom="55dp"
+        android:background="#f9931d"
         android:text="@string/transmit"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/changeRC"
         tools:text="transmit" />
@@ -96,5 +100,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/currentRC" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="20dp" />
 
 </android.support.constraint.ConstraintLayout>
