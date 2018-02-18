@@ -1,6 +1,7 @@
 package c.braedenm.dashesinadot;
 
 import android.content.Context;
+import android.os.Handler;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,6 +19,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 /**
  * Links with the activity_main and controls its activities
  */
@@ -26,7 +30,14 @@ public class MainActivity extends AppCompatActivity
     /* Local Variables */
     private final String DEFAULT_LOCATION = "defaultID";
     private final boolean ACTIVITY_DEFAULT = false;
-    private Boolean active;
+    private boolean activeReceive;
+    private boolean activeTransmit;
+
+    private ArrayList postPacket = new ArrayList();
+    private ArrayList pullPacket = new ArrayList();
+    private long pullStamp = 0;
+
+    Iterator pullPacketIterator = pullPacket.iterator();
 
     /* UI Elements */
     private Button transmitButton;
@@ -39,11 +50,12 @@ public class MainActivity extends AppCompatActivity
 
     /* Local Services */
     private Vibrator vibrator;
+    private Handler handler = new Handler();
 
     /* Remote Services */
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference transmitDB;
-    private DatabaseReference recieveDB;
+    private DatabaseReference receiveDB;
 
     /**
      * This is called when the application loads activity_main
@@ -57,15 +69,18 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         /* Default Values */
-        active = ACTIVITY_DEFAULT;
+        activeReceive = ACTIVITY_DEFAULT;
+        activeTransmit = ACTIVITY_DEFAULT;
 
         updateTransmitLocation(DEFAULT_LOCATION);
         updateReceiveLocation(DEFAULT_LOCATION);
 
-        transmitDB.setValue(ACTIVITY_DEFAULT);
+        writeDB(postPacket);
 
         initButtonPairs();
         initTransmitListener();
+        initPostThread();
+        initPullThread();
     }
 
     /**
@@ -83,7 +98,7 @@ public class MainActivity extends AppCompatActivity
      */
     private void updateReceiveLocation(String location)
     {
-        recieveDB = database.getReference(location);
+        receiveDB = database.getReference(location);
         initReceiveListener();
     }
 
@@ -113,18 +128,15 @@ public class MainActivity extends AppCompatActivity
             {
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN)
                 {
-                    //long[] pattern = {0, 200, 0}; //0 to start now, 200 to vibrate 200 ms, 0 to sleep for 0 ms.
-                    //vibrator.vibrate(pattern, 0); // 0 to repeat endlessly.
-                    transmitDB.setValue(true);
+                    activeTransmit = true;
                 }
                 else if (motionEvent.getAction() == MotionEvent.ACTION_UP || motionEvent.getAction() == MotionEvent.ACTION_CANCEL)
                 {
                     //vibrator.cancel();
-                    transmitDB.setValue(false);
+                    activeTransmit = false;
                 }
                 return true;
             }
-
         });
     }
 
@@ -133,29 +145,92 @@ public class MainActivity extends AppCompatActivity
      */
     private void initReceiveListener()
     {
-        recieveDB.addValueEventListener(new ValueEventListener()
+        receiveDB.addValueEventListener(new ValueEventListener()
         {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
-                active = dataSnapshot.getValue(Boolean.class);
-
-                if (active)
-                {
-                    long[] pattern = {0, 200, 0}; //0 to start now, 200 to vibrate 200 ms, 0 to sleep for 0 ms.
-                    vibrator.vibrate(pattern, 0); // 0 to repeat endlessly.
-                }
-                else
-                {
-                    vibrator.cancel();
+                ArrayList<Boolean> pulledData = (ArrayList<Boolean>)dataSnapshot.child("values").getValue();
+                long stamp = dataSnapshot.child("timestamp").getValue(Long.class);
+                if (pulledData != null && stamp > pullStamp) {
+                    pullPacket = pulledData;
+                    pullPacketIterator = pullPacket.iterator();
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError)
             {
-                Log.w("RecieveError", "Error retrieving database information");
+                Log.w("ReceiveError", "Error retrieving database information");
             }
         });
+    }
+
+    /**
+     * Creates a new post thread for inputs
+     */
+    private void initPostThread()
+    {
+        Runnable postToDataBase = new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                writeDB(postPacket);
+                //Log.d("Transmitting", Arrays.toString(postPacket.toArray()));
+                postPacket = new ArrayList();
+                handler.postDelayed(this, 3000);
+            }
+        };
+
+        Runnable appendToPacket = new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                postPacket.add(activeTransmit);
+                handler.postDelayed(this, 100);
+            }
+        };
+
+        handler.post(postToDataBase);
+        handler.post(appendToPacket);
+    }
+
+    /**
+     * Creates a new pull thread for outputs
+     */
+    private void initPullThread()
+    {
+        Runnable readPullPacket = new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                if (pullPacketIterator.hasNext()) {
+                    boolean active = (Boolean)pullPacketIterator.next();
+                    currentID.setText("" + active);
+
+                    if (active) {
+                        long[] pattern = {0, 200, 0};
+                        vibrator.vibrate(pattern, 0);
+                    }
+                    else {
+                        vibrator.cancel();
+                    }
+                }
+                handler.postDelayed(this, 100);
+            }
+        };
+        handler.post(readPullPacket);
+    }
+
+    /**
+     * Writes the parameter the database
+     * @param write Parameter to be wrote to database
+     */
+    private void writeDB(ArrayList write) {
+        transmitDB.child("values").setValue(write);
+        transmitDB.child("timestamp").setValue(System.currentTimeMillis());
     }
 }
