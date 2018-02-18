@@ -10,7 +10,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -24,28 +23,35 @@ import java.util.Iterator;
 
 /**
  * Links with the activity_main and controls its activities
+ * @author Braeden Muller
+ * @author James Zhang
+ * @author Katherine Sophery Yap
+ * @version 2018.2.18
  */
 public class MainActivity extends AppCompatActivity
 {
     /* Local Variables */
     private final String DEFAULT_LOCATION = "defaultID";
     private final boolean ACTIVITY_DEFAULT = false;
-    private boolean activeReceive;
     private boolean activeTransmit;
 
     private ArrayList postPacket = new ArrayList();
     private ArrayList pullPacket = new ArrayList();
+    private String user;
     private long pullStamp = 0;
 
-    Iterator pullPacketIterator = pullPacket.iterator();
+    private Iterator pullPacketIterator = pullPacket.iterator();
+
+    private String receiveLocation;
 
     /* UI Elements */
     private Button transmitButton;
     private Button changeID;
     private EditText editID;
     private TextView currentID;
-    //private TextView activeUsers;
-    private Spinner userMenu;
+    private Button changeRC;
+    private EditText editRC;
+    private TextView currentRC;
 
 
     /* Local Services */
@@ -69,15 +75,17 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         /* Default Values */
-        activeReceive = ACTIVITY_DEFAULT;
         activeTransmit = ACTIVITY_DEFAULT;
 
+        user = DEFAULT_LOCATION;
+        receiveLocation = DEFAULT_LOCATION;
         updateTransmitLocation(DEFAULT_LOCATION);
         updateReceiveLocation(DEFAULT_LOCATION);
 
         writeDB(postPacket);
 
         initButtonPairs();
+        initNameListener();
         initTransmitListener();
         initPostThread();
         initPullThread();
@@ -103,6 +111,32 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
+     * Push a new user onto the database
+     */
+    private void initNameListener()
+    {
+        changeID.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                user = editID.getText().toString();
+                updateTransmitLocation(user);
+                currentID.setText(user);
+            }
+        });
+
+        changeRC.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                receiveLocation = editRC.getText().toString();
+                updateReceiveLocation(receiveLocation);
+                currentRC.setText(receiveLocation);
+            }
+        });
+    }
+
+    /**
      * Called in setup, pairs logical references to UI elements
      */
     private void initButtonPairs()
@@ -111,7 +145,10 @@ public class MainActivity extends AppCompatActivity
         changeID = findViewById(R.id.changeID);
         editID = findViewById(R.id.enterID);
         currentID = findViewById(R.id.currentID);
-        userMenu = findViewById(R.id.userMenu);
+
+        changeRC = findViewById(R.id.changeRC);
+        editRC = findViewById(R.id.enterRC);
+        currentRC = findViewById(R.id.currentRC);
     }
 
     /**
@@ -209,7 +246,6 @@ public class MainActivity extends AppCompatActivity
             {
                 if (pullPacketIterator.hasNext()) {
                     boolean active = (Boolean)pullPacketIterator.next();
-                    currentID.setText("" + active);
 
                     if (active) {
                         long[] pattern = {0, 200, 0};
@@ -229,7 +265,8 @@ public class MainActivity extends AppCompatActivity
      * Writes the parameter the database
      * @param write Parameter to be wrote to database
      */
-    private void writeDB(ArrayList write) {
+    private void writeDB(ArrayList write)
+    {
         transmitDB.child("values").setValue(write);
         transmitDB.child("timestamp").setValue(System.currentTimeMillis());
     }

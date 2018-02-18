@@ -11,9 +11,9 @@
         android:id="@+id/changeID"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="73dp"
+        android:layout_marginBottom="48dp"
         android:text="@string/changeID"
-        app:layout_constraintBottom_toTopOf="@+id/userMenuLabel"
+        app:layout_constraintBottom_toTopOf="@+id/currentRC"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/currentID"
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="textNoSuggestions"
         android:selectAllOnFocus="true"
         android:singleLine="false"
         android:text="@string/enterIDdef"
@@ -38,7 +38,7 @@
     <TextView
         android:id="@+id/currentID"
         android:layout_width="121dp"
-        android:layout_height="27dp"
+        android:layout_height="0dp"
         android:layout_marginBottom="53dp"
         android:text="@string/yourIDdef"
         android:textAlignment="center"
@@ -50,41 +50,51 @@
 
     <Button
         android:id="@+id/transmitButton"
-        android:layout_width="211dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="92dp"
+        android:layout_width="221dp"
+        android:layout_height="99dp"
+        android:layout_marginBottom="91dp"
         android:background="@android:color/holo_orange_light"
         android:text="@string/transmit"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userMenu"
+        app:layout_constraintTop_toBottomOf="@+id/changeRC"
         tools:text="transmit" />
 
-    <Spinner
-        android:id="@+id/userMenu"
-        android:layout_width="0dp"
+    <Button
+        android:id="@+id/changeRC"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="68dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginBottom="28dp"
+        android:text="Change Receiving Channel"
         app:layout_constraintBottom_toTopOf="@+id/transmitButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userMenuLabel" />
+        app:layout_constraintTop_toBottomOf="@+id/enterRC" />
 
     <TextView
-        android:id="@+id/userMenuLabel"
+        android:id="@+id/currentRC"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="13dp"
-        android:layout_marginStart="9dp"
-        android:text="@string/activeUsers"
+        android:layout_marginBottom="8dp"
+        android:text="recID"
+        app:layout_constraintBottom_toTopOf="@+id/enterRC"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/changeID" />
+
+    <EditText
+        android:id="@+id/enterRC"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="@string/enterIDdef"
         android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/userMenu"
-        app:layout_constraintStart_toStartOf="@+id/changeID"
-        app:layout_constraintTop_toBottomOf="@+id/changeID"
-        tools:text="activeUsers" />
+        app:layout_constraintBottom_toTopOf="@+id/changeRC"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/currentRC" />
 
 </android.support.constraint.ConstraintLayout>
