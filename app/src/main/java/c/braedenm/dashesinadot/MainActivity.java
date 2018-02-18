@@ -154,10 +154,12 @@ public class MainActivity extends AppCompatActivity
         transmitButton = findViewById(R.id.transmitButton);
         changeID = findViewById(R.id.changeID);
         editID = findViewById(R.id.enterID);
+        editID.setSelectAllOnFocus(true);
         currentID = findViewById(R.id.currentID);
 
         changeRC = findViewById(R.id.changeRC);
         editRC = findViewById(R.id.enterRC);
+        editRC.setSelectAllOnFocus(true);
         currentRC = findViewById(R.id.currentRC);
     }
 
