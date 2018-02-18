@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity
 
     private ArrayList postPacket = new ArrayList();
     private ArrayList pullPacket = new ArrayList();
+    String user;
     private long pullStamp = 0;
 
     Iterator pullPacketIterator = pullPacket.iterator();
@@ -72,6 +73,7 @@ public class MainActivity extends AppCompatActivity
         activeReceive = ACTIVITY_DEFAULT;
         activeTransmit = ACTIVITY_DEFAULT;
 
+        user = DEFAULT_LOCATION;
         updateTransmitLocation(DEFAULT_LOCATION);
         updateReceiveLocation(DEFAULT_LOCATION);
 
@@ -100,6 +102,23 @@ public class MainActivity extends AppCompatActivity
     {
         receiveDB = database.getReference(location);
         initReceiveListener();
+    }
+
+    /**
+     * Push a new user onto the database
+     */
+    private void initNameListener()
+    {
+        changeID.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                user = editID.getText().toString();
+                updateTransmitLocation(user);
+                currentID.setText(user);
+            }
+        });
     }
 
     /**
@@ -229,8 +248,10 @@ public class MainActivity extends AppCompatActivity
      * Writes the parameter the database
      * @param write Parameter to be wrote to database
      */
-    private void writeDB(ArrayList write) {
+    private void writeDB(ArrayList write)
+    {
         transmitDB.child("values").setValue(write);
         transmitDB.child("timestamp").setValue(System.currentTimeMillis());
+        transmitDB.child("users").setValue(new ArrayList<String>());
     }
 }
