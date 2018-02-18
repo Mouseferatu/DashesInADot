@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -35,10 +36,13 @@ public class MainActivity extends AppCompatActivity
 
     private ArrayList postPacket = new ArrayList();
     private ArrayList pullPacket = new ArrayList();
-    String user;
+    private String user;
     private long pullStamp = 0;
 
-    Iterator pullPacketIterator = pullPacket.iterator();
+    private Iterator pullPacketIterator = pullPacket.iterator();
+
+    private String[] userArray;
+    private ArrayList<String> userIDs;
 
     /* UI Elements */
     private Button transmitButton;
@@ -52,6 +56,7 @@ public class MainActivity extends AppCompatActivity
     /* Local Services */
     private Vibrator vibrator;
     private Handler handler = new Handler();
+    private Context referenceContext;
 
     /* Remote Services */
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -72,10 +77,13 @@ public class MainActivity extends AppCompatActivity
         /* Default Values */
         activeReceive = ACTIVITY_DEFAULT;
         activeTransmit = ACTIVITY_DEFAULT;
+        userArray = new String[]{DEFAULT_LOCATION};
 
         user = DEFAULT_LOCATION;
         updateTransmitLocation(DEFAULT_LOCATION);
         updateReceiveLocation(DEFAULT_LOCATION);
+
+        referenceContext = this;
 
         writeDB(postPacket);
 
@@ -176,6 +184,13 @@ public class MainActivity extends AppCompatActivity
                     pullPacket = pulledData;
                     pullPacketIterator = pullPacket.iterator();
                 }
+
+                userIDs = new ArrayList<>();
+                for (DataSnapshot snap : dataSnapshot.getChildren()) {
+                    userIDs.add(snap.getKey());
+                }
+                userArray = userIDs.toArray(new String[0]);
+                userMenu.setAdapter(new ArrayAdapter<>(referenceContext, android.R.layout.simple_spinner_item, userArray));
             }
 
             @Override
@@ -229,7 +244,6 @@ public class MainActivity extends AppCompatActivity
             {
                 if (pullPacketIterator.hasNext()) {
                     boolean active = (Boolean)pullPacketIterator.next();
-                    currentID.setText("" + active);
 
                     if (active) {
                         long[] pattern = {0, 200, 0};
