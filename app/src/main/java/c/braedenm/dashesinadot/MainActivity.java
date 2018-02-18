@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity
         writeDB(postPacket);
 
         initButtonPairs();
+        initNameListener();
         initTransmitListener();
         initPostThread();
         initPullThread();
