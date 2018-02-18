@@ -19,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 
 /**
@@ -63,6 +64,11 @@ public class MainActivity extends AppCompatActivity
     private DatabaseReference transmitDB;
     private DatabaseReference receiveDB;
 
+    /* Resources */
+    Runnable postToDataBase;
+    Runnable appendToPacket;
+    Runnable readPullPacket;
+
     /**
      * This is called when the application loads activity_main
      * @param savedInstanceState Previous instance of the program
@@ -87,8 +93,8 @@ public class MainActivity extends AppCompatActivity
         initButtonPairs();
         initNameListener();
         initTransmitListener();
-        initPostThread();
-        initPullThread();
+        //initPostThread();
+        //initPullThread();
     }
 
     /**
@@ -98,6 +104,8 @@ public class MainActivity extends AppCompatActivity
     private void updateTransmitLocation(String location)
     {
         transmitDB = database.getReference(location);
+        closePostThread();
+        initPostThread();
     }
 
     /**
@@ -107,7 +115,9 @@ public class MainActivity extends AppCompatActivity
     private void updateReceiveLocation(String location)
     {
         receiveDB = database.getReference(location);
+        closePullThread();
         initReceiveListener();
+        initPullThread();
     }
 
     /**
@@ -208,19 +218,19 @@ public class MainActivity extends AppCompatActivity
      */
     private void initPostThread()
     {
-        Runnable postToDataBase = new Runnable()
+        postToDataBase = new Runnable()
         {
             @Override
             public void run()
             {
                 writeDB(postPacket);
-                //Log.d("Transmitting", Arrays.toString(postPacket.toArray()));
+                Log.d("Transmitting", Arrays.toString(postPacket.toArray()));
                 postPacket = new ArrayList();
                 handler.postDelayed(this, 3000);
             }
         };
 
-        Runnable appendToPacket = new Runnable()
+        appendToPacket = new Runnable()
         {
             @Override
             public void run()
@@ -234,12 +244,17 @@ public class MainActivity extends AppCompatActivity
         handler.post(appendToPacket);
     }
 
+    private void closePostThread() {
+        handler.removeCallbacks(postToDataBase);
+        handler.removeCallbacks(appendToPacket);
+    }
+
     /**
      * Creates a new pull thread for outputs
      */
     private void initPullThread()
     {
-        Runnable readPullPacket = new Runnable()
+        readPullPacket = new Runnable()
         {
             @Override
             public void run()
@@ -259,6 +274,10 @@ public class MainActivity extends AppCompatActivity
             }
         };
         handler.post(readPullPacket);
+    }
+
+    private void closePullThread() {
+        handler.removeCallbacks(readPullPacket);
     }
 
     /**
